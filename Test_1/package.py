@@ -3,7 +3,6 @@ from datetime import datetime
 
 class Package:
     """Класс функций для обработки пакета"""
-    dic_pack = {}
 
     def __init__(self, pack):
         self.pack = pack
