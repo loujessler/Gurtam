@@ -7,30 +7,25 @@ class Package:
     def __init__(self, pack):
         self.pack = pack
 
-    # Функция разделения на тип и данные
-    def split_pack(self):
-        return self.pack[1:].split('#')
-
-    def get_dict(self):
-        dic_pack = {}
-        lst = self.split_pack()
+    def get_dict(self, **kwargs):
+        lst = self.split_pack(self.pack)
         # Проверка на тип пакета
         if lst[0] == 'SD':
             # Обработка строки и сортировака от лишних значений
             lst = [x for x in lst[1].split(';') if not x.isalpha()]
             # Создание словаря с соотвествующими переменными
-            dic_pack['datetime'] = datetime.strptime(lst[0] + lst[1], '%d%m%Y%H%M%S')
-            dic_pack['lat'] = float(lst[2])
-            dic_pack['lon'] = float(lst[3])
-            dic_pack['speed'] = int(lst[4])
-            dic_pack['course'] = int(lst[5])
-            dic_pack['height'] = int(lst[6])
-            dic_pack['sats'] = int(''.join(x for x in lst[7] if x.isdigit()))
+            kwargs['datetime'] = datetime.strptime(lst[0] + lst[1], '%d%m%Y%H%M%S')
+            kwargs['lat'] = float(lst[2])
+            kwargs['lon'] = float(lst[3])
+            kwargs['speed'] = int(lst[4])
+            kwargs['course'] = int(lst[5])
+            kwargs['height'] = int(lst[6])
+            kwargs['sats'] = int(''.join(x for x in lst[7] if x.isdigit()))
         elif lst[0] == 'M':
-            dic_pack = lst[1]
+            kwargs = lst[1]
         else:
-            dic_pack = 'Error'
-        return dic_pack
+            kwargs = 'Error'
+        return kwargs
 
     # Запись данных в файл
     def write_to_file(self):
@@ -73,3 +68,8 @@ class Package:
             print('|  ' + str(dict_pack))
             print('|  ')
             print('################################################\n')
+
+    # Функция разделения на тип и данные
+    @staticmethod
+    def split_pack(pack):
+        return pack[1:].split('#')
